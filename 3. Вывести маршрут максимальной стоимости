@@ -1,0 +1,71 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+
+public class MaximumCostRoute {
+    public static void main(String[] args) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        String[] data = reader.readLine().split(" ");
+        int N = Integer.parseInt(data[0]);
+        int M = Integer.parseInt(data[1]);
+
+        int[][] weights = new int[N][M];
+
+        for (int i = 0; i < N; i++){
+            String[] row = reader.readLine().split(" ");
+            for (int j = 0; j < M; j++){
+                weights[i][j] = Integer.parseInt(row[j]);
+            }
+        }
+
+        int[][] result = new int[N][M];
+        char[][] path = new char[N][M];
+
+        result[0][0] = weights[0][0];
+
+        for (int i = 1; i < N; i++ ){
+            result[i][0] = result[i-1][0] + weights[i][0];
+            path[i][0] = 'D';
+        }
+
+        for (int j = 1; j < M; j++){
+            result[0][j] = result[0][j-1] + weights[0][j];
+            path[0][j] = 'R';
+        }
+
+        for (int i = 1; i < N; i++){
+            for (int j = 1; j < M; j++){
+               if (result[i-1][j] > result[i][j-1]){
+                   result[i][j] = result[i-1][j] + weights[i][j];
+                   path[i][j] = 'D';
+               } else {
+                   result[i][j] = result[i][j-1] + weights[i][j];
+                   path[i][j] = 'R';
+               }
+            }
+        }
+
+        writer.write(String.valueOf(result[N-1][M-1]));
+
+        writer.newLine();
+
+        writerPath(N - 1, M - 1, path, writer);
+
+        reader.close();
+        writer.close();
+    }
+
+    private static void writerPath(int i, int j, char[][] path, BufferedWriter writer) throws IOException {
+        if (i == 0 && j == 0) return;
+        if (path[i][j] == 'D'){
+            writerPath(i - 1, j, path, writer);
+        } else {
+            writerPath(i, j - 1, path, writer);
+        }
+        writer.write(path[i][j] + " ");
+    }
+}
