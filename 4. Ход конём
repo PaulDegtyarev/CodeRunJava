@@ -1,0 +1,28 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+
+public class KnightMove {
+    public static void main(String[] args) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        String[] numbers = reader.readLine().split(" ");
+        int N = Integer.parseInt(numbers[0]);
+        int M = Integer.parseInt(numbers[1]);
+
+        int[][] board = new int[N+1][M+1];
+
+        board[1][1] = 1;
+        for (int i =2; i <= N; i++)
+            for (int j = 2; j <= M; j++)
+                board[i][j] = board[i-1][j-2] + board[i-2][j-1];
+
+        writer.write(String.valueOf(board[N][M]));
+
+        reader.close();
+        writer.close();
+    }
+}
